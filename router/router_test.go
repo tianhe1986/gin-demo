@@ -1,6 +1,8 @@
 package router
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -38,4 +40,38 @@ func TestRouterAdd(t *testing.T) {
 	r.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, "13", w.Body.String())
+}
+
+func TestRouterMul(t *testing.T) {
+	r := SetupRouter()
+	w := httptest.NewRecorder()
+	var req *http.Request
+	var jsonStr []byte
+	var jsonMap map[string]interface{}
+
+	jsonStr = []byte(`{"a": 11, "b": "no"}`)
+	req, _ = http.NewRequest(http.MethodPost, "/mul", bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+	json.Unmarshal([]byte(w.Body.String()), &jsonMap)
+	assert.Equal(t, "error", jsonMap["result"])
+
+	w = httptest.NewRecorder()
+	jsonStr = []byte(`{"a": "ok", "b": 4}`)
+	req, _ = http.NewRequest(http.MethodPost, "/mul", bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+	json.Unmarshal([]byte(w.Body.String()), &jsonMap)
+	assert.Equal(t, "error", jsonMap["result"])
+
+	w = httptest.NewRecorder()
+	jsonStr = []byte(`{"a": 12, "b": 6}`)
+	req, _ = http.NewRequest(http.MethodPost, "/mul", bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
+	json.Unmarshal([]byte(w.Body.String()), &jsonMap)
+	assert.Equal(t, 72, int(jsonMap["result"].(float64)))
 }
