@@ -1,11 +1,8 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import "gin-demo/router"
 
 func main() {
-	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
+	r := router.SetupRouter()
 	r.Run(":19999")
 }
