@@ -14,6 +14,7 @@ func SetupRouter() *gin.Engine {
 	})
 
 	r.GET("/add/:a/:b", handler.AddResult)
+	r.GET("/sub", handler.SubResult)
 	r.POST("/mul", handler.MulResult)
 	return r
 }
