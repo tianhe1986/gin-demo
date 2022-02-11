@@ -75,3 +75,29 @@ func MulResult(context *gin.Context) {
 		"result": action.Mul(json.A, json.B),
 	})
 }
+
+func DivResult(context *gin.Context) {
+	a := context.DefaultPostForm("a", "0")
+	b := context.DefaultPostForm("b", "0")
+
+	// 强制转换
+	aint, erra := strconv.Atoi(a)
+	if erra != nil {
+		context.String(http.StatusInternalServerError, "error")
+		return
+	}
+
+	bint, errb := strconv.Atoi(b)
+	if errb != nil {
+		context.String(http.StatusInternalServerError, "error")
+		return
+	}
+
+	result, err := action.Div(aint, bint)
+	if err != nil {
+		context.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	context.String(http.StatusOK, "%d", result)
+}
