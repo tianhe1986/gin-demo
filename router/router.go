@@ -17,5 +17,6 @@ func SetupRouter() *gin.Engine {
 	r.GET("/sub", handler.SubResult)
 	r.POST("/mul", handler.MulResult)
 	r.POST("/div", handler.DivResult)
+	r.POST("/sum", handler.SumResult)
 	return r
 }

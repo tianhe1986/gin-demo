@@ -21,3 +21,11 @@ func Div(a int, b int) (int, error) {
 
 	return a / b, nil
 }
+
+func Sum(a []int) int {
+	result := 0
+	for _, num := range a {
+		result += num
+	}
+	return result
+}

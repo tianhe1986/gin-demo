@@ -56,3 +56,13 @@ func TestDiv(t *testing.T) {
 		assert.Equal(t, -8, ans)
 	})
 }
+
+func TestSum(t *testing.T) {
+	nums := []int{2, 4, -5}
+	ans := Sum(nums)
+	assert.Equal(t, 1, ans)
+
+	nums = []int{}
+	ans = Sum(nums)
+	assert.Equal(t, 0, ans)
+}

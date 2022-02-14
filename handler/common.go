@@ -101,3 +101,20 @@ func DivResult(context *gin.Context) {
 
 	context.String(http.StatusOK, "%d", result)
 }
+
+func SumResult(context *gin.Context) {
+	a := context.PostFormArray("a")
+
+	// 强制转换
+	var arr []int = make([]int, len(a))
+	for i, num := range a {
+		aint, err := strconv.Atoi(num)
+		if err != nil {
+			context.String(http.StatusInternalServerError, "error")
+			return
+		}
+		arr[i] = aint
+	}
+
+	context.String(http.StatusOK, "%d", action.Sum(arr))
+}

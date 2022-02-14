@@ -159,3 +159,41 @@ func TestRouterDiv(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, "-2", w.Body.String())
 }
+
+func TestRouterSum(t *testing.T) {
+	r := SetupRouter()
+	w := httptest.NewRecorder()
+	var req *http.Request
+	var data url.Values
+
+	data = url.Values{"a": {"54", "32", "cc"}}
+	req, _ = http.NewRequest(http.MethodPost, "/sum", strings.NewReader(data.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	r.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+	assert.Equal(t, "error", w.Body.String())
+
+	w = httptest.NewRecorder()
+	data = url.Values{}
+	req, _ = http.NewRequest(http.MethodPost, "/sum", strings.NewReader(data.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	r.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, "0", w.Body.String())
+
+	w = httptest.NewRecorder()
+	data = url.Values{"a": {"11"}}
+	req, _ = http.NewRequest(http.MethodPost, "/sum", strings.NewReader(data.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	r.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, "11", w.Body.String())
+
+	w = httptest.NewRecorder()
+	data = url.Values{"a": {"11", "65", "-98"}}
+	req, _ = http.NewRequest(http.MethodPost, "/sum", strings.NewReader(data.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	r.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, "-22", w.Body.String())
+}
